@@ -1,0 +1,2042 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhysicsQuiz - Game Kuis Fisika Interaktif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        .timer-bar {
+            transition: width 1s linear;
+        }
+        .option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .badge {
+            position: relative;
+            display: inline-block;
+        }
+        .badge::after {
+            content: "New!";
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #EF4444;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        
+        /* Animasi baru */
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .rotate {
+            animation: rotate 10s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .bounce {
+            animation: bounce 1s ease infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .scale {
+            animation: scale 2s ease-in-out infinite;
+        }
+        @keyframes scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        @keyframes glow {
+            from { box-shadow: 0 0 5px -5px rgba(255, 255, 255, 0.5); }
+            to { box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.5); }
+        }
+        
+        /* Animasi partikel */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Animasi gelembung */
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: bubble-rise linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes bubble-rise {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            95% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+        
+        /* Animasi bintang */
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            filter: blur(1px);
+            animation: twinkle linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        /* Animasi konfeti untuk hasil */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            animation: confetti-fall linear forwards;
+            pointer-events: none;
+            z-index: 10;
+        }
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        
+        /* Animasi untuk tombol */
+        .btn-hover {
+            transition: all 0.3s ease;
+            background-size: 200% auto;
+            background-image: linear-gradient(to right, #4F46E5 0%, #818CF8 50%, #4F46E5 100%);
+        }
+        .btn-hover:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Animasi untuk kartu */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-500 to-purple-700 text-white">
+    <!-- Background Bubbles -->
+    <div id="background-animation"></div>
+    
+    <div id="app" class="container mx-auto px-4 py-8 max-w-4xl relative z-10">
+        <!-- Pages will be dynamically loaded here -->
+    </div>
+
+    <script>
+        // Database Structure
+        const DB = {
+            init() {
+                // Pastikan localStorage tersedia
+                if (typeof localStorage === 'undefined') {
+                    console.error('localStorage tidak tersedia di browser ini');
+                    return;
+                }
+
+                if (!localStorage.getItem('users')) {
+                    localStorage.setItem('users', JSON.stringify({}));
+                }
+                if (!localStorage.getItem('leaderboard')) {
+                    localStorage.setItem('leaderboard', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('currentUser')) {
+                    localStorage.setItem('currentUser', '');
+                }
+                
+                // Debug: Tampilkan data yang tersimpan
+                console.log('Users:', this.getUsers());
+                console.log('Current User:', this.getCurrentUsername());
+                console.log('Leaderboard:', this.getLeaderboard());
+            },
+            getUsers() {
+                return JSON.parse(localStorage.getItem('users') || '{}');
+            },
+            getUser(username) {
+                const users = this.getUsers();
+                return users[username];
+            },
+            saveUser(username, userData) {
+                const users = this.getUsers();
+                users[username] = userData;
+                localStorage.setItem('users', JSON.stringify(users));
+                
+                // Debug: Konfirmasi penyimpanan
+                console.log(`User ${username} disimpan:`, userData);
+                console.log('Users setelah disimpan:', this.getUsers());
+            },
+            getCurrentUser() {
+                const username = localStorage.getItem('currentUser');
+                if (!username) return null;
+                return this.getUser(username);
+            },
+            getCurrentUsername() {
+                return localStorage.getItem('currentUser') || '';
+            },
+            setCurrentUser(username) {
+                localStorage.setItem('currentUser', username);
+                console.log(`Current user diatur ke: ${username}`);
+            },
+            logout() {
+                localStorage.setItem('currentUser', '');
+                console.log('User logout');
+            },
+            getLeaderboard() {
+                return JSON.parse(localStorage.getItem('leaderboard') || '[]');
+            },
+            updateLeaderboard(entry) {
+                const leaderboard = this.getLeaderboard();
+                
+                // Cari apakah username dan level sudah ada di leaderboard
+                const existingEntryIndex = leaderboard.findIndex(item => 
+                    item.username === entry.username && item.level === entry.level
+                );
+                
+                if (existingEntryIndex !== -1) {
+                    // Jika sudah ada, update hanya jika skor baru lebih tinggi
+                    if (entry.score > leaderboard[existingEntryIndex].score) {
+                        console.log(`Updating leaderboard entry for ${entry.username} at level ${entry.level} from ${leaderboard[existingEntryIndex].score} to ${entry.score}`);
+                        leaderboard[existingEntryIndex] = {
+                            ...entry,
+                            date: new Date().toISOString().split('T')[0] // Update tanggal juga
+                        };
+                    } else {
+                        console.log(`Score not updated for ${entry.username} as new score (${entry.score}) is not higher than existing (${leaderboard[existingEntryIndex].score})`);
+                    }
+                } else {
+                    // Jika belum ada, tambahkan entri baru
+                    console.log(`Adding new leaderboard entry for ${entry.username} at level ${entry.level} with score ${entry.score}`);
+                    leaderboard.push(entry);
+                }
+                
+                // Urutkan berdasarkan skor tertinggi
+                leaderboard.sort((a, b) => b.score - a.score);
+                
+                localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+                console.log('Leaderboard setelah diupdate:', this.getLeaderboard());
+            },
+            updateUserScore(username, level, score) {
+                const user = this.getUser(username);
+                if (!user) {
+                    console.error(`User ${username} tidak ditemukan`);
+                    return;
+                }
+                
+                if (!user.scores) {
+                    user.scores = {};
+                }
+                
+                // Only update if new score is higher
+                if (!user.scores[level] || score > user.scores[level]) {
+                    user.scores[level] = score;
+                    this.saveUser(username, user);
+                    
+                    // Update leaderboard
+                    this.updateLeaderboard({
+                        username: username,
+                        name: user.name,
+                        score: score,
+                        level: level,
+                        date: new Date().toISOString().split('T')[0],
+                        totalQuestions: 10,
+                        correctAnswers: score / 10
+                    });
+                }
+            }
+        };
+
+        // Quiz Questions Database
+        const quizQuestions = {
+            smp1: [
+                {
+                    question: "Alat yang digunakan untuk mengukur massa benda adalah...",
+                    options: ["Neraca", "Penggaris", "Stopwatch", "Termometer"],
+                    correctAnswer: "Neraca"
+                },
+                {
+                    question: "Satuan SI untuk panjang adalah...",
+                    options: ["Meter", "Kilogram", "Detik", "Ampere"],
+                    correctAnswer: "Meter"
+                },
+                {
+                    question: "Perubahan wujud dari padat ke gas disebut...",
+                    options: ["Sublimasi", "Mencair", "Menguap", "Mengembun"],
+                    correctAnswer: "Sublimasi"
+                },
+                {
+                    question: "Energi yang dimiliki benda karena posisinya disebut...",
+                    options: ["Energi potensial", "Energi kinetik", "Energi mekanik", "Energi panas"],
+                    correctAnswer: "Energi potensial"
+                },
+                {
+                    question: "Alat untuk mengukur suhu adalah...",
+                    options: ["Termometer", "Barometer", "Anemometer", "Higrometer"],
+                    correctAnswer: "Termometer"
+                },
+                {
+                    question: "Satuan SI untuk waktu adalah...",
+                    options: ["Detik", "Menit", "Jam", "Hari"],
+                    correctAnswer: "Detik"
+                },
+                {
+                    question: "Zat yang tidak dapat diuraikan lagi menjadi zat yang lebih sederhana disebut...",
+                    options: ["Unsur", "Senyawa", "Campuran", "Larutan"],
+                    correctAnswer: "Unsur"
+                },
+                {
+                    question: "Perubahan energi pada lampu pijar adalah...",
+                    options: ["Energi listrik menjadi cahaya dan panas", "Energi kimia menjadi listrik", "Energi cahaya menjadi listrik", "Energi panas menjadi cahaya"],
+                    correctAnswer: "Energi listrik menjadi cahaya dan panas"
+                },
+                {
+                    question: "Besaran yang memiliki nilai dan arah disebut...",
+                    options: ["Besaran vektor", "Besaran skalar", "Besaran pokok", "Besaran turunan"],
+                    correctAnswer: "Besaran vektor"
+                },
+                {
+                    question: "Massa jenis air murni pada suhu 4°C adalah...",
+                    options: ["1000 kg/m³", "1 kg/m³", "100 kg/m³", "10 kg/m³"],
+                    correctAnswer: "1000 kg/m³"
+                },
+                {
+                    question: "Perubahan wujud dari cair menjadi gas disebut...",
+                    options: ["Penguapan", "Pembekuan", "Pencairan", "Sublimasi"],
+                    correctAnswer: "Penguapan"
+                },
+                {
+                    question: "Satuan SI untuk massa adalah...",
+                    options: ["Kilogram", "Gram", "Ons", "Pound"],
+                    correctAnswer: "Kilogram"
+                }
+            ],
+            smp2: [
+                {
+                    question: "Kecepatan adalah...",
+                    options: ["Perpindahan dibagi waktu", "Jarak dibagi waktu", "Percepatan dikali waktu", "Massa dikali percepatan"],
+                    correctAnswer: "Jarak dibagi waktu"
+                },
+                {
+                    question: "Hukum Newton yang menyatakan bahwa setiap aksi akan menimbulkan reaksi adalah...",
+                    options: ["Hukum III Newton", "Hukum II Newton", "Hukum I Newton", "Hukum Gravitasi Newton"],
+                    correctAnswer: "Hukum III Newton"
+                },
+                {
+                    question: "Usaha dalam fisika didefinisikan sebagai...",
+                    options: ["Gaya dikali perpindahan", "Massa dikali percepatan", "Energi dibagi waktu", "Momentum dibagi massa"],
+                    correctAnswer: "Gaya dikali perpindahan"
+                },
+                {
+                    question: "Contoh pesawat sederhana jenis pengungkit adalah...",
+                    options: ["Gunting", "Sekrup", "Katrol tetap", "Bidang miring"],
+                    correctAnswer: "Gunting"
+                },
+                {
+                    question: "Satuan SI untuk gaya adalah...",
+                    options: ["Newton", "Joule", "Watt", "Pascal"],
+                    correctAnswer: "Newton"
+                },
+                {
+                    question: "Energi yang dimiliki benda karena geraknya disebut...",
+                    options: ["Energi kinetik", "Energi potensial", "Energi mekanik", "Energi kimia"],
+                    correctAnswer: "Energi kinetik"
+                },
+                {
+                    question: "Rumus untuk menghitung usaha adalah...",
+                    options: ["W = F × s", "W = m × g", "W = m × v", "W = F / s"],
+                    correctAnswer: "W = F × s"
+                },
+                {
+                    question: "Hukum kekekalan energi menyatakan bahwa...",
+                    options: ["Energi tidak dapat diciptakan atau dimusnahkan", "Energi selalu berkurang", "Energi selalu bertambah", "Energi selalu tetap"],
+                    correctAnswer: "Energi tidak dapat diciptakan atau dimusnahkan"
+                },
+                {
+                    question: "Alat yang mengubah energi listrik menjadi energi gerak adalah...",
+                    options: ["Motor listrik", "Generator", "Baterai", "Dinamo"],
+                    correctAnswer: "Motor listrik"
+                },
+                {
+                    question: "Percepatan gravitasi di bumi kira-kira sebesar...",
+                    options: ["9,8 m/s²", "10 m/s²", "5 m/s²", "15 m/s²"],
+                    correctAnswer: "9,8 m/s²"
+                },
+                {
+                    question: "Katrol tetap berfungsi untuk...",
+                    options: ["Mengubah arah gaya", "Memperbesar gaya", "Memperkecil gaya", "Menghilangkan gaya"],
+                    correctAnswer: "Mengubah arah gaya"
+                },
+                {
+                    question: "Rumus untuk menghitung daya adalah...",
+                    options: ["P = W/t", "P = F × s", "P = m × g", "P = m × v"],
+                    correctAnswer: "P = W/t"
+                }
+            ],
+            smp3: [
+                {
+                    question: "Arus listrik mengalir dari...",
+                    options: ["Potensial tinggi ke potensial rendah", "Potensial rendah ke potensial tinggi", "Kutub positif ke kutub negatif", "Tidak tentu arahnya"],
+                    correctAnswer: "Potensial tinggi ke potensial rendah"
+                },
+                {
+                    question: "Hukum Ohm menyatakan bahwa...",
+                    options: ["V = I × R", "I = V × R", "R = V × I", "V = I / R"],
+                    correctAnswer: "V = I × R"
+                },
+                {
+                    question: "Alat yang mengubah energi gerak menjadi energi listrik adalah...",
+                    options: ["Generator", "Motor listrik", "Transformator", "Kapasitor"],
+                    correctAnswer: "Generator"
+                },
+                {
+                    question: "Satuan SI untuk kuat arus listrik adalah...",
+                    options: ["Ampere", "Volt", "Ohm", "Watt"],
+                    correctAnswer: "Ampere"
+                },
+                {
+                    question: "Bahan yang dapat menghantarkan listrik dengan baik disebut...",
+                    options: ["Konduktor", "Isolator", "Semikonduktor", "Resistor"],
+                    correctAnswer: "Konduktor"
+                },
+                {
+                    question: "Magnet selalu memiliki...",
+                    options: ["Dua kutub", "Satu kutub", "Tiga kutub", "Empat kutub"],
+                    correctAnswer: "Dua kutub"
+                },
+                {
+                    question: "Gaya Lorentz terjadi pada...",
+                    options: ["Kawat berarus dalam medan magnet", "Kawat berarus dalam medan listrik", "Magnet dalam medan listrik", "Magnet dalam medan gravitasi"],
+                    correctAnswer: "Kawat berarus dalam medan magnet"
+                },
+                {
+                    question: "Transformator berfungsi untuk mengubah...",
+                    options: ["Tegangan listrik", "Arus listrik", "Hambatan listrik", "Daya listrik"],
+                    correctAnswer: "Tegangan listrik"
+                },
+                {
+                    question: "Satuan SI untuk hambatan listrik adalah...",
+                    options: ["Ohm", "Volt", "Ampere", "Watt"],
+                    correctAnswer: "Ohm"
+                },
+                {
+                    question: "Alat yang digunakan untuk mengukur kuat arus listrik adalah...",
+                    options: ["Amperemeter", "Voltmeter", "Ohmmeter", "Wattmeter"],
+                    correctAnswer: "Amperemeter"
+                },
+                {
+                    question: "Kutub-kutub magnet yang sejenis akan...",
+                    options: ["Tolak-menolak", "Tarik-menarik", "Tidak berinteraksi", "Berputar"],
+                    correctAnswer: "Tolak-menolak"
+                },
+                {
+                    question: "Elektromagnet adalah magnet yang...",
+                    options: ["Dihasilkan oleh arus listrik", "Terbuat dari besi", "Terbuat dari baja", "Terbuat dari aluminium"],
+                    correctAnswer: "Dihasilkan oleh arus listrik"
+                }
+            ],
+            sma1: [
+                {
+                    question: "Gerak benda yang lintasannya berupa garis lurus disebut...",
+                    options: ["Gerak lurus", "Gerak parabola", "Gerak melingkar", "Gerak rotasi"],
+                    correctAnswer: "Gerak lurus"
+                },
+                {
+                    question: "Pada gerak lurus beraturan (GLB), benda memiliki...",
+                    options: ["Kecepatan tetap", "Percepatan tetap", "Kecepatan berubah", "Percepatan berubah"],
+                    correctAnswer: "Kecepatan tetap"
+                },
+                {
+                    question: "Gerak jatuh bebas memiliki percepatan sebesar...",
+                    options: ["Percepatan gravitasi", "Nol", "Kecepatan awal", "Massa benda"],
+                    correctAnswer: "Percepatan gravitasi"
+                },
+                {
+                    question: "Lintasan gerak parabola berbentuk...",
+                    options: ["Parabola", "Lingkaran", "Garis lurus", "Elips"],
+                    correctAnswer: "Parabola"
+                },
+                {
+                    question: "Pada gerak melingkar beraturan, besar kecepatan...",
+                    options: ["Tetap, arah berubah", "Berubah, arah tetap", "Tetap, arah tetap", "Berubah, arah berubah"],
+                    correctAnswer: "Tetap, arah berubah"
+                },
+                {
+                    question: "Percepatan sentripetal pada gerak melingkar arahnya...",
+                    options: ["Menuju pusat lingkaran", "Menjauhi pusat lingkaran", "Searah gerak benda", "Berlawanan arah gerak benda"],
+                    correctAnswer: "Menuju pusat lingkaran"
+                },
+                {
+                    question: "Rumus kecepatan pada GLBB adalah...",
+                    options: ["v = v₀ + at", "v = s/t", "v = v₀ - at", "v = a × t²"],
+                    correctAnswer: "v = v₀ + at"
+                },
+                {
+                    question: "Pada gerak vertikal ke atas, kecepatan benda saat mencapai titik tertinggi adalah...",
+                    options: ["Nol", "Maksimum", "Setengah kecepatan awal", "Sama dengan kecepatan awal"],
+                    correctAnswer: "Nol"
+                },
+                {
+                    question: "Periode adalah waktu yang diperlukan untuk...",
+                    options: ["Satu putaran penuh", "Setengah putaran", "Seperempat putaran", "Dua putaran"],
+                    correctAnswer: "Satu putaran penuh"
+                },
+                {
+                    question: "Hubungan antara periode (T) dan frekuensi (f) adalah...",
+                    options: ["T = 1/f", "T = f", "T = 2f", "T = f/2"],
+                    correctAnswer: "T = 1/f"
+                },
+                {
+                    question: "Pada gerak parabola, komponen kecepatan pada sumbu x adalah...",
+                    options: ["Tetap", "Berubah", "Nol", "Negatif"],
+                    correctAnswer: "Tetap"
+                },
+                {
+                    question: "Pada gerak melingkar beraturan, percepatan sentripetal sebanding dengan...",
+                    options: ["Kuadrat kecepatan", "Kecepatan", "Akar kecepatan", "Kuadrat jari-jari"],
+                    correctAnswer: "Kuadrat kecepatan"
+                }
+            ],
+            sma2: [
+                {
+                    question: "Hukum I Newton disebut juga hukum...",
+                    options: ["Kelembaman", "Percepatan", "Aksi-reaksi", "Gravitasi"],
+                    correctAnswer: "Kelembaman"
+                },
+                {
+                    question: "Rumus hukum II Newton adalah...",
+                    options: ["F = m × a", "F = m × g", "F = m × v", "F = m / a"],
+                    correctAnswer: "F = m × a"
+                },
+                {
+                    question: "Momentum adalah hasil kali...",
+                    options: ["Massa dan kecepatan", "Massa dan percepatan", "Gaya dan waktu", "Gaya dan perpindahan"],
+                    correctAnswer: "Massa dan kecepatan"
+                },
+                {
+                    question: "Tekanan dalam fluida bergantung pada...",
+                    options: ["Kedalaman", "Luas permukaan", "Volume", "Massa jenis fluida"],
+                    correctAnswer: "Kedalaman"
+                },
+                {
+                    question: "Hukum Archimedes menyatakan tentang...",
+                    options: ["Gaya apung", "Tekanan hidrostatis", "Tekanan atmosfer", "Aliran fluida"],
+                    correctAnswer: "Gaya apung"
+                },
+                {
+                    question: "Elastisitas adalah kemampuan benda untuk...",
+                    options: ["Kembali ke bentuk semula", "Berubah bentuk", "Meregang", "Memantul"],
+                    correctAnswer: "Kembali ke bentuk semula"
+                },
+                {
+                    question: "Hukum Hooke berlaku untuk...",
+                    options: ["Benda elastis", "Benda plastis", "Fluida", "Gas ideal"],
+                    correctAnswer: "Benda elastis"
+                },
+                {
+                    question: "Impuls adalah hasil kali...",
+                    options: ["Gaya dan selang waktu", "Massa dan kecepatan", "Massa dan percepatan", "Gaya dan perpindahan"],
+                    correctAnswer: "Gaya dan selang waktu"
+                },
+                {
+                    question: "Prinsip Bernoulli menjelaskan hubungan antara...",
+                    options: ["Tekanan dan kecepatan fluida", "Tekanan dan volume fluida", "Tekanan dan massa fluida", "Tekanan dan suhu fluida"],
+                    correctAnswer: "Tekanan dan kecepatan fluida"
+                },
+                {
+                    question: "Hukum kekekalan momentum berlaku pada...",
+                    options: ["Tumbukan", "Gerak jatuh bebas", "Gerak melingkar", "Gerak harmonik"],
+                    correctAnswer: "Tumbukan"
+                },
+                {
+                    question: "Modulus Young adalah ukuran...",
+                    options: ["Elastisitas bahan", "Kekentalan fluida", "Kerapatan bahan", "Kekerasan bahan"],
+                    correctAnswer: "Elastisitas bahan"
+                },
+                {
+                    question: "Koefisien restitusi untuk tumbukan lenting sempurna adalah...",
+                    options: ["1", "0", "0,5", "2"],
+                    correctAnswer: "1"
+                }
+            ],
+            sma3: [
+                {
+                    question: "Gelombang elektromagnetik tidak memerlukan...",
+                    options: ["Medium", "Energi", "Frekuensi", "Panjang gelombang"],
+                    correctAnswer: "Medium"
+                },
+                {
+                    question: "Peristiwa pembiasan cahaya terjadi karena...",
+                    options: ["Perbedaan kecepatan cahaya pada medium berbeda", "Perbedaan warna cahaya", "Perbedaan intensitas cahaya", "Perbedaan arah cahaya"],
+                    correctAnswer: "Perbedaan kecepatan cahaya pada medium berbeda"
+                },
+                {
+                    question: "Interferensi cahaya membuktikan bahwa cahaya bersifat...",
+                    options: ["Gelombang", "Partikel", "Materi", "Energi"],
+                    correctAnswer: "Gelombang"
+                },
+                {
+                    question: "Efek fotolistrik membuktikan bahwa cahaya bersifat...",
+                    options: ["Partikel", "Gelombang", "Materi", "Medan"],
+                    correctAnswer: "Partikel"
+                },
+                {
+                    question: "Teori relativitas khusus dikemukakan oleh...",
+                    options: ["Einstein", "Newton", "Planck", "Bohr"],
+                    correctAnswer: "Einstein"
+                },
+                {
+                    question: "Persamaan E = mc² menunjukkan hubungan antara...",
+                    options: ["Energi dan massa", "Energi dan kecepatan", "Massa dan kecepatan", "Energi dan waktu"],
+                    correctAnswer: "Energi dan massa"
+                },
+                {
+                    question: "Model atom yang menggambarkan elektron mengorbit inti seperti planet mengorbit matahari adalah model atom...",
+                    options: ["Bohr", "Thomson", "Rutherford", "Dalton"],
+                    correctAnswer: "Bohr"
+                },
+                {
+                    question: "Prinsip ketidakpastian Heisenberg menyatakan bahwa tidak mungkin menentukan secara bersamaan dan tepat...",
+                    options: ["Posisi dan momentum partikel", "Energi dan waktu", "Massa dan kecepatan", "Muatan dan spin"],
+                    correctAnswer: "Posisi dan momentum partikel"
+                },
+                {
+                    question: "Gelombang elektromagnetik dengan panjang gelombang terpendek adalah...",
+                    options: ["Sinar gamma", "Sinar-X", "Sinar ultraviolet", "Gelombang radio"],
+                    correctAnswer: "Sinar gamma"
+                },
+                {
+                    question: "Difraksi adalah peristiwa...",
+                    options: ["Pembelokan gelombang", "Pemantulan gelombang", "Pembiasan gelombang", "Perpaduan gelombang"],
+                    correctAnswer: "Pembelokan gelombang"
+                },
+                {
+                    question: "Spektrum atom hidrogen terjadi karena...",
+                    options: ["Transisi elektron antar tingkat energi", "Getaran inti atom", "Rotasi atom", "Vibrasi molekul"],
+                    correctAnswer: "Transisi elektron antar tingkat energi"
+                },
+                {
+                    question: "Dualisme gelombang-partikel dikemukakan oleh...",
+                    options: ["de Broglie", "Einstein", "Bohr", "Schrödinger"],
+                    correctAnswer: "de Broglie"
+                }
+            ]
+        };
+
+        // App State
+        const state = {
+            currentPage: 'landing',
+            quiz: {
+                level: '',
+                questions: [],
+                currentQuestionIndex: 0,
+                score: 0,
+                timer: null,
+                timeLeft: 15,
+                answered: false,
+                correctAnswers: 0
+            },
+            leaderboard: {
+                selectedLevel: 'all' // Default: tampilkan semua level
+            }
+        };
+
+        // Router
+        const router = {
+            navigate(page) {
+                state.currentPage = page;
+                this.render();
+            },
+            render() {
+                const app = document.getElementById('app');
+                app.innerHTML = '';
+                
+                switch(state.currentPage) {
+                    case 'landing':
+                        app.appendChild(pages.landing());
+                        createBackgroundAnimation('bubbles');
+                        break;
+                    case 'login':
+                        app.appendChild(pages.login());
+                        createBackgroundAnimation('stars');
+                        break;
+                    case 'register':
+                        app.appendChild(pages.register());
+                        createBackgroundAnimation('stars');
+                        break;
+                    case 'levels':
+                        app.appendChild(pages.levels());
+                        createBackgroundAnimation('particles');
+                        break;
+                    case 'quiz':
+                        app.appendChild(pages.quiz());
+                        createBackgroundAnimation('minimal');
+                        break;
+                    case 'results':
+                        app.appendChild(pages.results());
+                        if (state.quiz.score >= 70) {
+                            createConfetti();
+                        }
+                        createBackgroundAnimation('stars');
+                        break;
+                    case 'leaderboard':
+                        app.appendChild(pages.leaderboard());
+                        createBackgroundAnimation('particles');
+                        break;
+                    default:
+                        app.appendChild(pages.landing());
+                        createBackgroundAnimation('bubbles');
+                }
+            }
+        };
+
+        // Page Components
+        const pages = {
+            landing() {
+                const container = document.createElement('div');
+                container.className = 'text-center py-10 fade-in';
+                
+                const logo = document.createElement('div');
+                logo.innerHTML = `
+                    <svg class="w-24 h-24 mx-auto mb-4 float" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="45" fill="#4F46E5" />
+                        <circle cx="50" cy="50" r="30" fill="#6366F1" />
+                        <circle cx="50" cy="50" r="15" fill="#818CF8" />
+                        <path d="M50 5 L55 20 L70 20 L60 30 L65 45 L50 35 L35 45 L40 30 L30 20 L45 20 Z" fill="#FFFFFF" class="rotate" style="transform-origin: center;" />
+                    </svg>
+                `;
+                
+                const title = document.createElement('h1');
+                title.className = 'text-4xl font-bold mb-4 glow';
+                title.textContent = 'PhysicsQuiz';
+                
+                const subtitle = document.createElement('p');
+                subtitle.className = 'text-xl mb-8';
+                subtitle.textContent = 'Game Kuis Fisika Interaktif';
+                
+                const buttonContainer = document.createElement('div');
+                buttonContainer.className = 'flex flex-col space-y-4 max-w-xs mx-auto';
+                
+                const loginButton = document.createElement('button');
+                loginButton.className = 'bg-white text-indigo-700 font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-indigo-50 transition duration-300 btn-hover';
+                loginButton.textContent = 'Masuk';
+                loginButton.addEventListener('click', () => router.navigate('login'));
+                
+                const registerButton = document.createElement('button');
+                registerButton.className = 'bg-indigo-900 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-indigo-800 transition duration-300 btn-hover';
+                registerButton.textContent = 'Daftar';
+                registerButton.addEventListener('click', () => router.navigate('register'));
+                
+                // Animasi atom berputar
+                const atom = document.createElement('div');
+                atom.className = 'mt-12 relative w-40 h-40 mx-auto';
+                atom.innerHTML = `
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="w-8 h-8 bg-blue-500 rounded-full glow"></div>
+                    </div>
+                    <div class="absolute inset-0 rotate" style="animation-duration: 8s;">
+                        <div class="absolute w-full h-full border-2 border-white border-opacity-50 rounded-full"></div>
+                    </div>
+                    <div class="absolute inset-0 rotate" style="animation-duration: 12s; transform: rotate(60deg);">
+                        <div class="absolute w-full h-full border-2 border-white border-opacity-50 rounded-full"></div>
+                    </div>
+                    <div class="absolute inset-0 rotate" style="animation-duration: 10s; transform: rotate(120deg);">
+                        <div class="absolute w-full h-full border-2 border-white border-opacity-50 rounded-full"></div>
+                    </div>
+                    <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-pink-400 rounded-full"></div>
+                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-green-400 rounded-full"></div>
+                    <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-4 h-4 bg-yellow-400 rounded-full"></div>
+                    <div class="absolute right-0 top-1/2 transform -translate-y-1/2 w-4 h-4 bg-purple-400 rounded-full"></div>
+                `;
+                
+                buttonContainer.appendChild(loginButton);
+                buttonContainer.appendChild(registerButton);
+                
+                container.appendChild(logo);
+                container.appendChild(title);
+                container.appendChild(subtitle);
+                container.appendChild(buttonContainer);
+                container.appendChild(atom);
+                
+                return container;
+            },
+            
+            login() {
+                const container = document.createElement('div');
+                container.className = 'max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden md:max-w-md mt-10 fade-in card-hover';
+                
+                const content = document.createElement('div');
+                content.className = 'p-8';
+                
+                const title = document.createElement('h2');
+                title.className = 'text-2xl font-bold text-gray-800 mb-6 text-center';
+                title.textContent = 'Masuk ke Akun Anda';
+                
+                const form = document.createElement('form');
+                form.className = 'space-y-6';
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+                    
+                    const users = DB.getUsers();
+                    
+                    if (users[username] && users[username].password === password) {
+                        DB.setCurrentUser(username);
+                        router.navigate('levels');
+                    } else {
+                        const errorMsg = document.getElementById('error-message');
+                        errorMsg.textContent = 'Username atau password salah!';
+                        errorMsg.classList.remove('hidden');
+                        
+                        // Animasi shake pada form
+                        form.classList.add('shake');
+                        setTimeout(() => {
+                            form.classList.remove('shake');
+                        }, 500);
+                    }
+                });
+                
+                // Username field
+                const usernameGroup = document.createElement('div');
+                usernameGroup.innerHTML = `
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                    <input type="text" id="username" name="username" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
+                        placeholder="Masukkan username">
+                `;
+                
+                // Password field
+                const passwordGroup = document.createElement('div');
+                passwordGroup.innerHTML = `
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="password" name="password" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
+                        placeholder="Masukkan password">
+                `;
+                
+                // Error message
+                const errorMsg = document.createElement('div');
+                errorMsg.id = 'error-message';
+                errorMsg.className = 'text-red-500 text-sm hidden';
+                
+                // Submit button
+                const submitButton = document.createElement('button');
+                submitButton.type = 'submit';
+                submitButton.className = 'w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-300 btn-hover';
+                submitButton.textContent = 'Masuk';
+                
+                // Register link
+                const registerLink = document.createElement('div');
+                registerLink.className = 'text-center mt-4 text-sm';
+                registerLink.innerHTML = `
+                    <span class="text-gray-600">Belum punya akun?</span>
+                    <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">Daftar sekarang</a>
+                `;
+                registerLink.querySelector('a').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    router.navigate('register');
+                });
+                
+                // Back button
+                const backButton = document.createElement('div');
+                backButton.className = 'text-center mt-6';
+                backButton.innerHTML = `
+                    <a href="#" class="text-indigo-600 hover:text-indigo-800 text-sm flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Kembali ke Halaman Utama
+                    </a>
+                `;
+                backButton.querySelector('a').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    router.navigate('landing');
+                });
+                
+                form.appendChild(usernameGroup);
+                form.appendChild(passwordGroup);
+                form.appendChild(errorMsg);
+                form.appendChild(submitButton);
+                
+                content.appendChild(title);
+                content.appendChild(form);
+                content.appendChild(registerLink);
+                content.appendChild(backButton);
+                
+                container.appendChild(content);
+                
+                return container;
+            },
+            
+            register() {
+                const container = document.createElement('div');
+                container.className = 'max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden md:max-w-md mt-10 fade-in card-hover';
+                
+                const content = document.createElement('div');
+                content.className = 'p-8';
+                
+                const title = document.createElement('h2');
+                title.className = 'text-2xl font-bold text-gray-800 mb-6 text-center';
+                title.textContent = 'Buat Akun Baru';
+                
+                const form = document.createElement('form');
+                form.className = 'space-y-4';
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    const fullname = document.getElementById('fullname').value;
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+                    
+                    const users = DB.getUsers();
+                    
+                    if (users[username]) {
+                        const errorMsg = document.getElementById('error-message');
+                        errorMsg.textContent = 'Username sudah digunakan!';
+                        errorMsg.classList.remove('hidden');
+                        
+                        // Animasi shake pada form
+                        form.classList.add('shake');
+                        setTimeout(() => {
+                            form.classList.remove('shake');
+                        }, 500);
+                        return;
+                    }
+                    
+                    // Create new user
+                    const newUser = {
+                        name: fullname,
+                        password: password,
+                        dateRegistered: new Date().toISOString().split('T')[0],
+                        scores: {}
+                    };
+                    
+                    DB.saveUser(username, newUser);
+                    DB.setCurrentUser(username);
+                    
+                    router.navigate('levels');
+                });
+                
+                // Full Name field
+                const fullnameGroup = document.createElement('div');
+                fullnameGroup.innerHTML = `
+                    <label for="fullname" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                    <input type="text" id="fullname" name="fullname" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
+                        placeholder="Masukkan nama lengkap">
+                `;
+                
+                // Username field
+                const usernameGroup = document.createElement('div');
+                usernameGroup.innerHTML = `
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                    <input type="text" id="username" name="username" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
+                        placeholder="Masukkan username">
+                `;
+                
+                // Password field
+                const passwordGroup = document.createElement('div');
+                passwordGroup.innerHTML = `
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="password" name="password" required minlength="6"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900"
+                        placeholder="Minimal 6 karakter">
+                `;
+                
+                // Error message
+                const errorMsg = document.createElement('div');
+                errorMsg.id = 'error-message';
+                errorMsg.className = 'text-red-500 text-sm hidden';
+                
+                // Submit button
+                const submitButton = document.createElement('button');
+                submitButton.type = 'submit';
+                submitButton.className = 'w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-300 mt-2 btn-hover';
+                submitButton.textContent = 'Daftar';
+                
+                // Login link
+                const loginLink = document.createElement('div');
+                loginLink.className = 'text-center mt-4 text-sm';
+                loginLink.innerHTML = `
+                    <span class="text-gray-600">Sudah punya akun?</span>
+                    <a href="#" class="text-indigo-600 hover:text-indigo-800 font-medium">Masuk sekarang</a>
+                `;
+                loginLink.querySelector('a').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    router.navigate('login');
+                });
+                
+                // Back button
+                const backButton = document.createElement('div');
+                backButton.className = 'text-center mt-6';
+                backButton.innerHTML = `
+                    <a href="#" class="text-indigo-600 hover:text-indigo-800 text-sm flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                        Kembali ke Halaman Utama
+                    </a>
+                `;
+                backButton.querySelector('a').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    router.navigate('landing');
+                });
+                
+                form.appendChild(fullnameGroup);
+                form.appendChild(usernameGroup);
+                form.appendChild(passwordGroup);
+                form.appendChild(errorMsg);
+                form.appendChild(submitButton);
+                
+                content.appendChild(title);
+                content.appendChild(form);
+                content.appendChild(loginLink);
+                content.appendChild(backButton);
+                
+                container.appendChild(content);
+                
+                return container;
+            },
+            
+            levels() {
+                const user = DB.getCurrentUser();
+                if (!user) {
+                    router.navigate('login');
+                    return document.createElement('div');
+                }
+                
+                const container = document.createElement('div');
+                container.className = 'max-w-4xl mx-auto p-4 fade-in';
+                
+                // Header
+                const header = document.createElement('div');
+                header.className = 'flex justify-between items-center mb-8';
+                
+                const title = document.createElement('h1');
+                title.className = 'text-3xl font-bold';
+                title.textContent = 'Pilih Level Kuis';
+                
+                const userInfo = document.createElement('div');
+                userInfo.className = 'flex items-center';
+                
+                const avatar = document.createElement('div');
+                avatar.className = 'w-10 h-10 rounded-full bg-indigo-300 flex items-center justify-center text-indigo-800 font-bold mr-3 pulse';
+                avatar.textContent = user.name.charAt(0).toUpperCase();
+                
+                const userName = document.createElement('div');
+                userName.className = 'mr-4';
+                userName.innerHTML = `
+                    <div class="font-semibold">${user.name}</div>
+                    <div class="text-xs opacity-75">@${DB.getCurrentUsername()}</div>
+                `;
+                
+                const logoutBtn = document.createElement('button');
+                logoutBtn.className = 'bg-indigo-800 hover:bg-indigo-900 text-white text-sm py-1 px-3 rounded-lg transition duration-300 btn-hover';
+                logoutBtn.textContent = 'Logout';
+                logoutBtn.addEventListener('click', () => {
+                    DB.logout();
+                    router.navigate('landing');
+                });
+                
+                userInfo.appendChild(avatar);
+                userInfo.appendChild(userName);
+                userInfo.appendChild(logoutBtn);
+                
+                header.appendChild(title);
+                header.appendChild(userInfo);
+                
+                // Levels grid
+                const levelsGrid = document.createElement('div');
+                levelsGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+                
+                const levels = [
+                    { id: 'smp1', name: 'SMP Kelas 1', desc: 'Dasar-dasar fisika', icon: '📏', color: 'from-blue-400 to-blue-600' },
+                    { id: 'smp2', name: 'SMP Kelas 2', desc: 'Mekanika dan energi', icon: '⚙️', color: 'from-green-400 to-green-600' },
+                    { id: 'smp3', name: 'SMP Kelas 3', desc: 'Listrik dan magnet', icon: '⚡', color: 'from-yellow-400 to-yellow-600' },
+                    { id: 'sma1', name: 'SMA Kelas 1', desc: 'Kinematika', icon: '🚀', color: 'from-red-400 to-red-600' },
+                    { id: 'sma2', name: 'SMA Kelas 2', desc: 'Dinamika dan fluida', icon: '🌊', color: 'from-purple-400 to-purple-600' },
+                    { id: 'sma3', name: 'SMA Kelas 3', desc: 'Fisika modern', icon: '⚛️', color: 'from-pink-400 to-pink-600' }
+                ];
+                
+                levels.forEach((level, index) => {
+                    const levelCard = document.createElement('div');
+                    levelCard.className = `bg-gradient-to-br ${level.color} rounded-xl shadow-lg overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl card-hover`;
+                    // Tambahkan animasi float dengan delay berbeda untuk setiap kartu
+                    levelCard.style.animation = `float 3s ease-in-out infinite ${index * 0.2}s`;
+                    
+                    // Check if user has completed previous level
+                    let isLocked = false;
+                    if (level.id !== 'smp1') {
+                        const prevLevelIndex = levels.findIndex(l => l.id === level.id) - 1;
+                        const prevLevelId = levels[prevLevelIndex].id;
+                        
+                        // Level is locked if previous level score is less than 70 or doesn't exist
+                        isLocked = !user.scores || !user.scores[prevLevelId] || user.scores[prevLevelId] < 70;
+                    }
+                    
+                    if (isLocked) {
+                        levelCard.classList.add('opacity-60');
+                    } else {
+                        levelCard.addEventListener('click', () => {
+                            // Start quiz with this level
+                            quizController.startQuiz(level.id);
+                        });
+                    }
+                    
+                    const score = user.scores && user.scores[level.id] ? user.scores[level.id] : 0;
+                    
+                    levelCard.innerHTML = `
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-4xl ${isLocked ? '' : 'bounce'}" style="animation-delay: ${index * 0.3}s">${level.icon}</span>
+                                ${isLocked ? 
+                                    `<span class="bg-gray-800 bg-opacity-50 text-white text-xs py-1 px-3 rounded-full flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                        </svg>
+                                        Terkunci
+                                    </span>` : 
+                                    `<span class="bg-white bg-opacity-30 text-white text-xs py-1 px-3 rounded-full">
+                                        Score: ${score}
+                                    </span>`
+                                }
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-1">${level.name}</h3>
+                            <p class="text-white text-opacity-90 text-sm mb-4">${level.desc}</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-white text-opacity-80">10 soal</span>
+                                ${isLocked ? 
+                                    `<span class="text-xs text-white text-opacity-80">Selesaikan level sebelumnya</span>` : 
+                                    `<button class="bg-white bg-opacity-30 hover:bg-opacity-40 text-white text-sm py-1 px-3 rounded-lg transition duration-300 btn-hover">
+                                        Mulai Kuis
+                                    </button>`
+                                }
+                            </div>
+                        </div>
+                    `;
+                    
+                    levelsGrid.appendChild(levelCard);
+                });
+                
+                // Leaderboard button
+                const leaderboardBtn = document.createElement('div');
+                leaderboardBtn.className = 'mt-8 text-center';
+                leaderboardBtn.innerHTML = `
+                    <button class="bg-white text-indigo-700 font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-indigo-50 transition duration-300 flex items-center mx-auto btn-hover glow">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        Lihat Leaderboard
+                    </button>
+                `;
+                leaderboardBtn.querySelector('button').addEventListener('click', () => {
+                    router.navigate('leaderboard');
+                });
+                
+                container.appendChild(header);
+                container.appendChild(levelsGrid);
+                container.appendChild(leaderboardBtn);
+                
+                return container;
+            },
+            
+            quiz() {
+                const user = DB.getCurrentUser();
+                if (!user) {
+                    router.navigate('login');
+                    return document.createElement('div');
+                }
+                
+                const container = document.createElement('div');
+                container.className = 'max-w-3xl mx-auto p-4 fade-in';
+                
+                // Quiz header
+                const header = document.createElement('div');
+                header.className = 'flex justify-between items-center mb-6';
+                
+                const levelInfo = document.createElement('div');
+                let levelName = '';
+                switch(state.quiz.level) {
+                    case 'smp1': levelName = 'SMP Kelas 1'; break;
+                    case 'smp2': levelName = 'SMP Kelas 2'; break;
+                    case 'smp3': levelName = 'SMP Kelas 3'; break;
+                    case 'sma1': levelName = 'SMA Kelas 1'; break;
+                    case 'sma2': levelName = 'SMA Kelas 2'; break;
+                    case 'sma3': levelName = 'SMA Kelas 3'; break;
+                }
+                
+                levelInfo.innerHTML = `
+                    <h2 class="text-2xl font-bold">${levelName}</h2>
+                    <p class="text-sm opacity-80">Kuis Fisika Interaktif</p>
+                `;
+                
+                const scoreInfo = document.createElement('div');
+                scoreInfo.className = 'text-right';
+                scoreInfo.innerHTML = `
+                    <div class="text-xl font-bold">Score: <span id="current-score" class="scale" style="display: inline-block;">${state.quiz.score}</span></div>
+                    <div class="text-sm opacity-80">Soal: <span id="question-progress">${state.quiz.currentQuestionIndex + 1}/${state.quiz.questions.length}</span></div>
+                `;
+                
+                header.appendChild(levelInfo);
+                header.appendChild(scoreInfo);
+                
+                // Timer
+                const timerContainer = document.createElement('div');
+                timerContainer.className = 'mb-6';
+                timerContainer.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-sm font-medium">Waktu Tersisa</span>
+                        <span id="timer-seconds" class="text-sm font-medium">${state.quiz.timeLeft} detik</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="timer-bar" class="timer-bar bg-blue-600 h-2.5 rounded-full" style="width: 100%"></div>
+                    </div>
+                `;
+                
+                // Question card
+                const questionCard = document.createElement('div');
+                questionCard.className = 'bg-white rounded-xl shadow-lg p-6 mb-6 card-hover';
+                
+                const currentQuestion = state.quiz.questions[state.quiz.currentQuestionIndex];
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'text-gray-800 text-lg font-medium mb-6 slide-in';
+                questionText.textContent = currentQuestion.question;
+                
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'space-y-3';
+                
+                const optionLetters = ['A', 'B', 'C', 'D'];
+                
+                currentQuestion.options.forEach((option, index) => {
+                    const optionElement = document.createElement('div');
+                    optionElement.className = 'option bg-gray-100 hover:bg-gray-200 rounded-lg p-4 cursor-pointer transition duration-300 flex items-center slide-in';
+                    optionElement.style.animationDelay = `${index * 0.1}s`;
+                    optionElement.innerHTML = `
+                        <span class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-800 flex items-center justify-center font-medium mr-3">
+                            ${optionLetters[index]}
+                        </span>
+                        <span class="text-gray-900">${option}</span>
+                    `;
+                    
+                    optionElement.addEventListener('click', () => {
+                        if (state.quiz.answered) return;
+                        
+                        state.quiz.answered = true;
+                        
+                        // Check answer
+                        const isCorrect = option === currentQuestion.correctAnswer;
+                        
+                        if (isCorrect) {
+                            optionElement.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                            optionElement.classList.add('bg-green-100', 'border-green-500', 'border-2');
+                            state.quiz.score += 10;
+                            state.quiz.correctAnswers++;
+                            document.getElementById('current-score').textContent = state.quiz.score;
+                            
+                            // Animasi untuk jawaban benar
+                            createParticleEffect(optionElement, 'correct');
+                        } else {
+                            optionElement.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                            optionElement.classList.add('bg-red-100', 'border-red-500', 'border-2');
+                            optionElement.classList.add('shake');
+                            
+                            // Show correct answer
+                            const options = document.querySelectorAll('.option');
+                            options.forEach((opt, idx) => {
+                                const optText = opt.querySelector('span:last-child').textContent;
+                                if (optText === currentQuestion.correctAnswer) {
+                                    opt.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                                    opt.classList.add('bg-green-100', 'border-green-500', 'border-2');
+                                }
+                            });
+                        }
+                        
+                        // Clear timer
+                        clearInterval(state.quiz.timer);
+                        
+                        // Move to next question after delay
+                        setTimeout(() => {
+                            quizController.nextQuestion();
+                        }, 1500);
+                    });
+                    
+                    optionsContainer.appendChild(optionElement);
+                });
+                
+                questionCard.appendChild(questionText);
+                questionCard.appendChild(optionsContainer);
+                
+                // Progress bar
+                const progressContainer = document.createElement('div');
+                progressContainer.className = 'mb-6';
+                progressContainer.innerHTML = `
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-sm font-medium">Progress</span>
+                        <span class="text-sm font-medium">${state.quiz.currentQuestionIndex + 1}/${state.quiz.questions.length}</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-indigo-600 h-2.5 rounded-full" style="width: ${((state.quiz.currentQuestionIndex + 1) / state.quiz.questions.length) * 100}%; transition: width 0.5s ease-in-out;"></div>
+                    </div>
+                `;
+                
+                // Exit button
+                const exitButton = document.createElement('button');
+                exitButton.className = 'text-sm text-indigo-600 hover:text-indigo-800 flex items-center';
+                exitButton.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Keluar dari Kuis
+                `;
+                exitButton.addEventListener('click', () => {
+                    if (confirm('Yakin ingin keluar dari kuis? Progress tidak akan disimpan.')) {
+                        clearInterval(state.quiz.timer);
+                        router.navigate('levels');
+                    }
+                });
+                
+                container.appendChild(header);
+                container.appendChild(timerContainer);
+                container.appendChild(questionCard);
+                container.appendChild(progressContainer);
+                container.appendChild(exitButton);
+                
+                // Start timer after the page is rendered
+                setTimeout(() => {
+                    quizController.startTimer();
+                }, 0);
+                
+                return container;
+            },
+            
+            results() {
+                const user = DB.getCurrentUser();
+                if (!user) {
+                    router.navigate('login');
+                    return document.createElement('div');
+                }
+                
+                const container = document.createElement('div');
+                container.className = 'max-w-md mx-auto p-4 text-center fade-in';
+                
+                // Result card
+                const resultCard = document.createElement('div');
+                resultCard.className = 'bg-white rounded-xl shadow-lg p-8 mb-6 card-hover';
+                
+                // Header with icon
+                let resultIcon, resultTitle, resultClass;
+                if (state.quiz.score >= 80) {
+                    resultIcon = '🏆';
+                    resultTitle = 'Luar Biasa!';
+                    resultClass = 'text-green-600';
+                } else if (state.quiz.score >= 60) {
+                    resultIcon = '🎉';
+                    resultTitle = 'Bagus!';
+                    resultClass = 'text-blue-600';
+                } else {
+                    resultIcon = '📚';
+                    resultTitle = 'Terus Belajar!';
+                    resultClass = 'text-yellow-600';
+                }
+                
+                const header = document.createElement('div');
+                header.className = 'mb-6';
+                header.innerHTML = `
+                    <div class="text-5xl mb-2 bounce">${resultIcon}</div>
+                    <h2 class="text-2xl font-bold ${resultClass}">${resultTitle}</h2>
+                    <p class="text-gray-600">Kuis ${getLevelName(state.quiz.level)} selesai</p>
+                `;
+                
+                // Score display
+                const scoreDisplay = document.createElement('div');
+                scoreDisplay.className = 'bg-gray-100 rounded-lg p-6 mb-6';
+                scoreDisplay.innerHTML = `
+                    <div class="text-4xl font-bold text-indigo-700 mb-2 scale">${state.quiz.score}</div>
+                    <div class="text-gray-600">Skor Akhir</div>
+                    <div class="flex justify-center items-center mt-4">
+                        <div class="flex items-center mr-4">
+                            <svg class="w-4 h-4 text-green-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-sm">${state.quiz.correctAnswers} Benar</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-4 h-4 text-red-500 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="text-sm">${10 - state.quiz.correctAnswers} Salah</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Next level button (if score >= 70)
+                let actionButtons = document.createElement('div');
+                actionButtons.className = 'space-y-3';
+                
+                if (state.quiz.score >= 70) {
+                    // Check if there's a next level
+                    const levels = ['smp1', 'smp2', 'smp3', 'sma1', 'sma2', 'sma3'];
+                    const currentLevelIndex = levels.indexOf(state.quiz.level);
+                    
+                    if (currentLevelIndex < levels.length - 1) {
+                        const nextLevel = levels[currentLevelIndex + 1];
+                        
+                        const nextLevelBtn = document.createElement('button');
+                        nextLevelBtn.className = 'w-full bg-indigo-600 text-white py-3 px-4 rounded-lg hover:bg-indigo-700 transition duration-300 flex items-center justify-center btn-hover';
+                        nextLevelBtn.innerHTML = `
+                            <span>Lanjut ke ${getLevelName(nextLevel)}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                        `;
+                        nextLevelBtn.addEventListener('click', () => {
+                            quizController.startQuiz(nextLevel);
+                        });
+                        
+                        actionButtons.appendChild(nextLevelBtn);
+                    }
+                }
+                
+                // Retry button
+                const retryBtn = document.createElement('button');
+                retryBtn.className = `w-full ${state.quiz.score >= 70 ? 'bg-gray-200 text-gray-800' : 'bg-indigo-600 text-white'} py-3 px-4 rounded-lg hover:bg-opacity-90 transition duration-300 btn-hover`;
+                retryBtn.textContent = 'Coba Lagi';
+                retryBtn.addEventListener('click', () => {
+                    quizController.startQuiz(state.quiz.level);
+                });
+                
+                actionButtons.appendChild(retryBtn);
+                
+                // Back to levels button
+                const backBtn = document.createElement('button');
+                backBtn.className = 'w-full bg-white border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 transition duration-300 btn-hover';
+                backBtn.textContent = 'Kembali ke Pilihan Level';
+                backBtn.addEventListener('click', () => {
+                    router.navigate('levels');
+                });
+                
+                actionButtons.appendChild(backBtn);
+                
+                // View leaderboard link
+                const leaderboardLink = document.createElement('div');
+                leaderboardLink.className = 'mt-6';
+                leaderboardLink.innerHTML = `
+                    <a href="#" class="text-indigo-600 hover:text-indigo-800 text-sm flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        Lihat Leaderboard
+                    </a>
+                `;
+                leaderboardLink.querySelector('a').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Set filter to current level
+                    state.leaderboard.selectedLevel = state.quiz.level;
+                    router.navigate('leaderboard');
+                });
+                
+                resultCard.appendChild(header);
+                resultCard.appendChild(scoreDisplay);
+                resultCard.appendChild(actionButtons);
+                
+                container.appendChild(resultCard);
+                container.appendChild(leaderboardLink);
+                
+                return container;
+            },
+            
+            leaderboard() {
+                const container = document.createElement('div');
+                container.className = 'max-w-3xl mx-auto p-4 fade-in';
+                
+                // Header
+                const header = document.createElement('div');
+                header.className = 'flex justify-between items-center mb-6';
+                
+                const title = document.createElement('h1');
+                title.className = 'text-3xl font-bold';
+                title.textContent = 'Leaderboard';
+                
+                const backBtn = document.createElement('button');
+                backBtn.className = 'bg-indigo-800 hover:bg-indigo-900 text-white text-sm py-2 px-4 rounded-lg transition duration-300 flex items-center btn-hover';
+                backBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    Kembali
+                `;
+                backBtn.addEventListener('click', () => {
+                    router.navigate('levels');
+                });
+                
+                header.appendChild(title);
+                header.appendChild(backBtn);
+                
+                // Level filter
+                const filterContainer = document.createElement('div');
+                filterContainer.className = 'mb-6 bg-white rounded-lg shadow-md p-4 card-hover';
+                
+                const filterLabel = document.createElement('div');
+                filterLabel.className = 'text-gray-700 font-medium mb-3';
+                filterLabel.textContent = 'Filter berdasarkan tingkat:';
+                
+                const filterOptions = document.createElement('div');
+                filterOptions.className = 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2';
+                
+                // Filter options
+                const levels = [
+                    { id: 'all', name: 'Semua Tingkat' },
+                    { id: 'smp1', name: 'SMP Kelas 1' },
+                    { id: 'smp2', name: 'SMP Kelas 2' },
+                    { id: 'smp3', name: 'SMP Kelas 3' },
+                    { id: 'sma1', name: 'SMA Kelas 1' },
+                    { id: 'sma2', name: 'SMA Kelas 2' },
+                    { id: 'sma3', name: 'SMA Kelas 3' }
+                ];
+                
+                levels.forEach(level => {
+                    const option = document.createElement('button');
+                    option.className = `text-sm py-2 px-3 rounded-md transition-colors ${
+                        state.leaderboard.selectedLevel === level.id 
+                            ? 'bg-indigo-600 text-white' 
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    } btn-hover`;
+                    option.textContent = level.name;
+                    option.addEventListener('click', () => {
+                        state.leaderboard.selectedLevel = level.id;
+                        router.render();
+                    });
+                    
+                    filterOptions.appendChild(option);
+                });
+                
+                filterContainer.appendChild(filterLabel);
+                filterContainer.appendChild(filterOptions);
+                
+                // Leaderboard table
+                const leaderboardCard = document.createElement('div');
+                leaderboardCard.className = 'bg-white rounded-xl shadow-lg overflow-hidden card-hover';
+                
+                let leaderboardData = DB.getLeaderboard();
+                
+                // Filter by level if needed
+                if (state.leaderboard.selectedLevel !== 'all') {
+                    leaderboardData = leaderboardData.filter(entry => entry.level === state.leaderboard.selectedLevel);
+                }
+                
+                // Sort by score (highest first)
+                leaderboardData.sort((a, b) => b.score - a.score);
+                
+                // Take top 10
+                const top10 = leaderboardData.slice(0, 10);
+                
+                if (top10.length === 0) {
+                    // Empty state
+                    const emptyState = document.createElement('div');
+                    emptyState.className = 'p-8 text-center';
+                    emptyState.innerHTML = `
+                        <div class="text-5xl mb-4 float">🏆</div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">Belum Ada Data</h3>
+                        <p class="text-gray-600">
+                            ${state.leaderboard.selectedLevel === 'all' 
+                                ? 'Jadilah yang pertama masuk leaderboard dengan menyelesaikan kuis!' 
+                                : `Belum ada data untuk tingkat ${getLevelName(state.leaderboard.selectedLevel)}`
+                            }
+                        </p>
+                    `;
+                    
+                    leaderboardCard.appendChild(emptyState);
+                } else {
+                    // Table
+                    const table = document.createElement('table');
+                    table.className = 'w-full';
+                    
+                    // Table header
+                    const thead = document.createElement('thead');
+                    thead.className = 'bg-gray-100 border-b';
+                    thead.innerHTML = `
+                        <tr>
+                            <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Rank</th>
+                            <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Pemain</th>
+                            <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Level</th>
+                            <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Score</th>
+                            <th class="py-3 px-4 text-left text-sm font-semibold text-gray-700">Tanggal</th>
+                        </tr>
+                    `;
+                    
+                    // Table body
+                    const tbody = document.createElement('tbody');
+                    
+                    top10.forEach((entry, index) => {
+                        const row = document.createElement('tr');
+                        row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+                        row.classList.add('slide-in');
+                        row.style.animationDelay = `${index * 0.05}s`;
+                        
+                        // Highlight current user
+                        if (entry.username === DB.getCurrentUsername()) {
+                            row.classList.add('bg-indigo-50');
+                        }
+                        
+                        // Rank cell with medal for top 3
+                        let rankDisplay = `<span>${index + 1}</span>`;
+                        if (index === 0) {
+                            rankDisplay = `<span class="text-yellow-500 text-lg pulse">🥇</span>`;
+                        } else if (index === 1) {
+                            rankDisplay = `<span class="text-gray-400 text-lg pulse" style="animation-delay: 0.2s">🥈</span>`;
+                        } else if (index === 2) {
+                            rankDisplay = `<span class="text-amber-700 text-lg pulse" style="animation-delay: 0.4s">🥉</span>`;
+                        }
+                        
+                        row.innerHTML = `
+                            <td class="py-3 px-4 text-sm text-gray-800 font-medium">${rankDisplay}</td>
+                            <td class="py-3 px-4">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-800 font-medium mr-3">
+                                        ${entry.name.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-800">${entry.name}</div>
+                                        <div class="text-xs text-gray-500">@${entry.username}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-4 text-sm text-gray-800">${getLevelName(entry.level)}</td>
+                            <td class="py-3 px-4 text-sm font-medium text-gray-800">${entry.score}</td>
+                            <td class="py-3 px-4 text-sm text-gray-500">${entry.date}</td>
+                        `;
+                        
+                        tbody.appendChild(row);
+                    });
+                    
+                    table.appendChild(thead);
+                    table.appendChild(tbody);
+                    leaderboardCard.appendChild(table);
+                }
+                
+                container.appendChild(header);
+                container.appendChild(filterContainer);
+                container.appendChild(leaderboardCard);
+                
+                return container;
+            }
+        };
+
+        // Quiz Controller
+        const quizController = {
+            startQuiz(level) {
+                // Reset quiz state
+                state.quiz.level = level;
+                state.quiz.score = 0;
+                state.quiz.currentQuestionIndex = 0;
+                state.quiz.answered = false;
+                state.quiz.correctAnswers = 0;
+                
+                // Get questions for this level
+                const allQuestions = quizQuestions[level];
+                
+                // Shuffle and select 10 questions
+                state.quiz.questions = this.shuffleArray(allQuestions).slice(0, 10);
+                
+                // Shuffle options for each question
+                state.quiz.questions.forEach(question => {
+                    // Create array of options with correct answer marked
+                    const optionsWithCorrect = question.options.map(option => ({
+                        text: option,
+                        isCorrect: option === question.correctAnswer
+                    }));
+                    
+                    // Shuffle the options
+                    const shuffledOptions = this.shuffleArray(optionsWithCorrect);
+                    
+                    // Update the question with shuffled options
+                    question.options = shuffledOptions.map(option => option.text);
+                    question.correctAnswer = question.correctAnswer; // Keep the correct answer text the same
+                });
+                
+                // Navigate to quiz page
+                router.navigate('quiz');
+            },
+            
+            nextQuestion() {
+                // Clear existing timer
+                if (state.quiz.timer) {
+                    clearInterval(state.quiz.timer);
+                }
+                
+                // Reset answered state
+                state.quiz.answered = false;
+                
+                // Check if we've reached the end of the quiz
+                if (state.quiz.currentQuestionIndex >= state.quiz.questions.length - 1) {
+                    this.endQuiz();
+                    return;
+                }
+                
+                // Move to next question
+                state.quiz.currentQuestionIndex++;
+                state.quiz.timeLeft = 15;
+                
+                // Re-render quiz page
+                router.render();
+            },
+            
+            startTimer() {
+                state.quiz.timeLeft = 15;
+                const timerBar = document.getElementById('timer-bar');
+                const timerSeconds = document.getElementById('timer-seconds');
+                
+                // Clear any existing timer
+                if (state.quiz.timer) {
+                    clearInterval(state.quiz.timer);
+                }
+                
+                // Set up new timer
+                state.quiz.timer = setInterval(() => {
+                    state.quiz.timeLeft--;
+                    
+                    // Update timer display
+                    if (timerSeconds) {
+                        timerSeconds.textContent = `${state.quiz.timeLeft} detik`;
+                    }
+                    
+                    // Update timer bar
+                    if (timerBar) {
+                        timerBar.style.width = `${(state.quiz.timeLeft / 15) * 100}%`;
+                        
+                        // Change color when time is running out
+                        if (state.quiz.timeLeft <= 5) {
+                            timerBar.classList.remove('bg-blue-600');
+                            timerBar.classList.add('bg-red-600');
+                            
+                            // Add pulse animation when time is running out
+                            timerBar.classList.add('pulse');
+                        }
+                    }
+                    
+                    // Time's up
+                    if (state.quiz.timeLeft <= 0) {
+                        clearInterval(state.quiz.timer);
+                        
+                        // Mark as answered to prevent further clicks
+                        state.quiz.answered = true;
+                        
+                        // Show correct answer
+                        const currentQuestion = state.quiz.questions[state.quiz.currentQuestionIndex];
+                        const correctAnswer = currentQuestion.correctAnswer;
+                        const options = document.querySelectorAll('.option');
+                        
+                        options.forEach((option) => {
+                            const optionText = option.querySelector('span:last-child').textContent;
+                            if (optionText === correctAnswer) {
+                                option.classList.remove('bg-gray-100', 'hover:bg-gray-200');
+                                option.classList.add('bg-green-100', 'border-green-500', 'border-2');
+                            }
+                        });
+                        
+                        // Move to next question after delay
+                        setTimeout(() => {
+                            this.nextQuestion();
+                        }, 1500);
+                    }
+                }, 1000);
+            },
+            
+            endQuiz() {
+                // Save score to user data
+                const username = DB.getCurrentUsername();
+                DB.updateUserScore(username, state.quiz.level, state.quiz.score);
+                
+                // Navigate to results page
+                router.navigate('results');
+            },
+            
+            shuffleArray(array) {
+                const newArray = [...array];
+                for (let i = newArray.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+                }
+                return newArray;
+            }
+        };
+
+        // Helper function to get level name
+        function getLevelName(levelId) {
+            switch(levelId) {
+                case 'smp1': return 'SMP Kelas 1';
+                case 'smp2': return 'SMP Kelas 2';
+                case 'smp3': return 'SMP Kelas 3';
+                case 'sma1': return 'SMA Kelas 1';
+                case 'sma2': return 'SMA Kelas 2';
+                case 'sma3': return 'SMA Kelas 3';
+                default: return levelId;
+            }
+        }
+        
+        // Background animation functions
+        function createBackgroundAnimation(type) {
+            const bgContainer = document.getElementById('background-animation');
+            bgContainer.innerHTML = '';
+            
+            switch(type) {
+                case 'bubbles':
+                    createBubbles(bgContainer);
+                    break;
+                case 'stars':
+                    createStars(bgContainer);
+                    break;
+                case 'particles':
+                    createParticles(bgContainer);
+                    break;
+                case 'minimal':
+                    createMinimalBg(bgContainer);
+                    break;
+            }
+        }
+        
+        function createBubbles(container) {
+            for (let i = 0; i < 20; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                
+                const size = Math.random() * 60 + 20;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.animationDuration = `${Math.random() * 10 + 10}s`;
+                
+                container.appendChild(bubble);
+            }
+        }
+        
+        function createStars(container) {
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                const size = Math.random() * 3 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDuration = `${Math.random() * 3 + 1}s`;
+                
+                container.appendChild(star);
+            }
+        }
+        
+        function createParticles(container) {
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 6 + 2;
+                const color = `hsl(${Math.random() * 60 + 220}, 70%, 70%)`;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.backgroundColor = color;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.opacity = Math.random() * 0.5 + 0.2;
+                
+                // Add floating animation
+                particle.style.animation = `float ${Math.random() * 6 + 4}s ease-in-out infinite`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        function createMinimalBg(container) {
+            // Create subtle gradient lines
+            for (let i = 0; i < 5; i++) {
+                const line = document.createElement('div');
+                line.style.position = 'absolute';
+                line.style.height = '1px';
+                line.style.width = '100%';
+                line.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                line.style.top = `${i * 25}%`;
+                line.style.left = '0';
+                
+                container.appendChild(line);
+            }
+        }
+        
+        // Particle effect for correct answers
+        function createParticleEffect(element, type) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const colors = type === 'correct' ? 
+                ['#4ade80', '#22c55e', '#16a34a', '#bbf7d0'] : 
+                ['#f87171', '#ef4444', '#dc2626', '#fecaca'];
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 8 + 4;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.backgroundColor = color;
+                particle.style.position = 'fixed';
+                particle.style.borderRadius = '50%';
+                particle.style.left = `${centerX}px`;
+                particle.style.top = `${centerY}px`;
+                particle.style.pointerEvents = 'none';
+                
+                // Random direction
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 100 + 50;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+                
+                // Animation
+                particle.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${vx}px, ${vy}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: Math.random() * 1000 + 500,
+                    easing: 'cubic-bezier(0, .9, .57, 1)'
+                });
+                
+                document.body.appendChild(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    particle.remove();
+                }, 1500);
+            }
+        }
+        
+        // Confetti effect for results page
+        function createConfetti() {
+            const colors = ['#4F46E5', '#818CF8', '#6366F1', '#C7D2FE', '#E0E7FF'];
+            
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    
+                    // Random shape
+                    const shapes = ['circle', 'square', 'triangle'];
+                    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+                    
+                    if (shape === 'circle') {
+                        confetti.style.borderRadius = '50%';
+                    } else if (shape === 'triangle') {
+                        confetti.style.width = '0';
+                        confetti.style.height = '0';
+                        confetti.style.backgroundColor = 'transparent';
+                        confetti.style.borderLeft = '5px solid transparent';
+                        confetti.style.borderRight = '5px solid transparent';
+                        confetti.style.borderBottom = `10px solid ${colors[Math.floor(Math.random() * colors.length)]}`;
+                    }
+                    
+                    confetti.style.backgroundColor = shape === 'triangle' ? 'transparent' : colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = `${Math.random() * 100}%`;
+                    
+                    // Animation
+                    const duration = Math.random() * 3000 + 2000;
+                    confetti.style.animation = `confetti-fall ${duration}ms linear forwards`;
+                    
+                    // Random rotation
+                    const rotation = Math.random() * 360;
+                    confetti.style.transform = `rotate(${rotation}deg)`;
+                    
+                    document.body.appendChild(confetti);
+                    
+                    // Remove confetti after animation
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, duration);
+                    
+                }, i * 50);
+            }
+        }
+
+        // Initialize the app
+        function init() {
+            DB.init();
+            router.render();
+        }
+
+        // Start the app
+        init();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96414305d7c2d738',t:'MTc1MzMzNzUwNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
